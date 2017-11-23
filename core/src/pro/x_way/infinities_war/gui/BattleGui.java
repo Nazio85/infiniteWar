@@ -17,7 +17,6 @@ import java.util.List;
 import pro.x_way.infinities_war.Assets;
 import pro.x_way.infinities_war.actions.BaseAction;
 import pro.x_way.infinities_war.text.StyleText;
-import pro.x_way.infinities_war.units.GenerateUnit;
 import pro.x_way.infinities_war.units.Unit;
 import pro.x_way.infinities_war.units.UnitFactory;
 import pro.x_way.infinities_war.windows.BattleScreen;
@@ -37,7 +36,7 @@ public class BattleGui {
     public BattleGui(BattleScreen battleScreen) {
         this.battleScreen = battleScreen;
         stage = battleScreen.getStage();
-        unitFactory = GenerateUnit.getInstance().getUnitFactory();
+        unitFactory = new UnitFactory();
         units = battleScreen.getUnits();
         currentUnit = battleScreen.getCurrentUnit();
 
@@ -48,7 +47,7 @@ public class BattleGui {
         skin = new Skin(Assets.getInstance().getAtlas());
         prepareTextureForBtnPanel();
         for (Unit unit : units) {
-            if (!unit.isAI()) {
+            if (unit.isPlayer()) {
                 Group actionPanel = createActionPanel(unit);
                 stage.addActor(actionPanel);
                 createBtnForActionPanel(unit, actionPanel);

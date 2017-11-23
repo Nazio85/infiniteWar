@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import pro.x_way.infinities_war.Assets;
+import pro.x_way.infinities_war.Session;
 import pro.x_way.infinities_war.text.StyleText;
 
 
@@ -73,6 +74,7 @@ public class MenuScreen implements Screen {
         btnNewGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Session.getInstance().startGame();
                 ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
             }
         });

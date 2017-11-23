@@ -18,11 +18,12 @@ import java.util.List;
 import pro.x_way.infinities_war.Assets;
 import pro.x_way.infinities_war.Calculator;
 import pro.x_way.infinities_war.MyInputProcessor;
+import pro.x_way.infinities_war.Session;
 import pro.x_way.infinities_war.SpecialFXEmitter;
 import pro.x_way.infinities_war.gui.GUI;
 import pro.x_way.infinities_war.text.GameText;
-import pro.x_way.infinities_war.units.GenerateUnit;
 import pro.x_way.infinities_war.units.Unit;
+import pro.x_way.infinities_war.units.UnitFactory;
 
 public class BattleScreen implements Screen {
     public static final String WINDOW_NEXT_LEVEL = "windowNextLevel";
@@ -37,7 +38,7 @@ public class BattleScreen implements Screen {
     private Vector2[][] stayPoints;
     private float animationTimer;
     private Stage stage;
-//    private BitmapFont font;
+//    public static UnitFactory unitFactory;
 
     private MyInputProcessor mip;
     private SpecialFXEmitter specialFXEmitter;
@@ -53,9 +54,13 @@ public class BattleScreen implements Screen {
     public void show() {
         createStayPoints();
 
-        units = new ArrayList<Unit>();
 
-        GenerateUnit.getInstance().setup(this);
+
+//        GenerateUnit.getInstance().setup(this);
+//        unitFactory = new UnitFactory();
+        Session.getInstance().loadFight(this);
+        units = Session.getInstance().getAllUnit();
+
 
         //Управление
         mip = new MyInputProcessor();
@@ -192,7 +197,10 @@ public class BattleScreen implements Screen {
             batch.setColor(1, 0, 0, 0.8f);
             batch.draw(textureRegion, currentUnit.getTarget().getPosition().x, currentUnit.getTarget().getPosition().y - 5);
         }
+
+
         batch.setColor(1, 1, 1, 1);
+
         for (int i = 0; i < units.size(); i++) {
             units.get(i).render(batch);
         }

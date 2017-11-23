@@ -25,6 +25,24 @@ public class Unit {
 
     public static final int TYPE_DAMAGE = -1;
     public static final int TYPE_HILL = 1;
+    private final UnitFactory.UnitType unitType;
+
+
+    public void reload(TextureRegion texture, List<BaseAction> actions) {
+        this.texture = texture;
+        this.frames = this.texture.split(WIDTH, HEIGHT);
+        this.actions = actions;
+        this.effects.clear();
+        this.animationSpeed = 0.2f;
+        this.frames = this.texture.split(WIDTH, HEIGHT);
+        this.maxFrame = this.frames[0].length;
+        this.maxAnimationType = this.frames.length - 1;
+        this.currentAnimation = AnimationType.IDLE;
+    }
+
+    public UnitFactory.UnitType getType() {
+        return unitType;
+    }
 
     public enum AnimationType {
         IDLE(0), ATTACK(1);
@@ -72,7 +90,8 @@ public class Unit {
     private List<Effect> effects;
 
 
-    public Unit(TextureRegion texture, Stats stats) {
+    public Unit(UnitFactory.UnitType unitType, TextureRegion texture, Stats stats) {
+        this.unitType = unitType;
         this.texture = texture;
         this.stats = stats;
         this.effects = new ArrayList<Effect>();
@@ -306,6 +325,10 @@ public class Unit {
         this.rect = new Rectangle(position.x, position.y, texture.getRegionWidth(), texture.getRegionHeight());
         this.recalculateHP();
         this.recalculateMP();
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public void setAttackAction(float attackAction) {
