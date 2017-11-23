@@ -78,7 +78,6 @@ public class Unit {
         this.effects = new ArrayList<Effect>();
         this.position = new Vector2(0, 0);
         this.actions = new ArrayList<BaseAction>();
-//        this.textureHpBar = Assets.getInstance().getAtlas().findRegion("hpBar");
         this.animationSpeed = 0.2f;
         this.frames = this.texture.split(WIDTH, HEIGHT);
         this.maxFrame = this.frames[0].length;

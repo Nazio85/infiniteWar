@@ -25,6 +25,15 @@ public class Calculator {
         return (int) (percentTexture * percentStatus);
     }
 
+    public static boolean isLowHp(Unit currentUnit) {
+        float result = (float) currentUnit.getHp() * 100 / currentUnit.getMaxHp();
+        if (result < 40) return true;
+        else return false;
+    }
+
+    public static int getTotalDamage(int dmg) {
+        return (int) (dmg * 0.8f + (float) dmg * Math.random() * 0.5f);
+    }
 
     public static boolean isMiss(Unit currentUnit, Unit targetUnit) {
         int currentUnitDexterity = currentUnit.getStats().getDexterity();

@@ -8,10 +8,26 @@ import pro.x_way.infinities_war.windows.ScreenManager;
 
 
 public class Assets {
-    public static final String WINDOW_NEXT_LEVEL = "windowNextLevel";
-    public static final String BTN_STAY_HERE = "btnStayHere.png";
-    public static final String BTN_NEXT_LEVEL = "btnNextLevel.png";
     private static final Assets ourInstance = new Assets();
+
+    public static final String WINDOW_NEXT_LEVEL = "windowNextLevel";
+    public static final String BTN_STAY_HERE = "btnStayHere";
+    public static final String BTN_NEXT_LEVEL = "btnNextLevel";
+    public static final String MENU_BTN = "menuBtn";
+    public static final String EXPLOSION64 = "explosion64";
+    public static final String KNIGHT_ANIM = "knightAnim";
+    public static final String KNIGHT = "knight";
+    public static final String SKELETON = "skeleton";
+    public static final String ACTION_PANEL = "actionPanel";
+    public static final String BTN_RANGED = "btnRanged";
+    public static final String BTN_REGEN = "btnRegen";
+    public static final String BTN_MELEE_ATTACK = "btnMeleeAttack";
+    public static final String BTN_DEFENCE = "btnDefence";
+    public static final String BTN_HEAL = "btnHeal";
+    public static final String SELECTOR = "selector";
+    public static final String HP_BAR = "hpBar";
+    public static final String BACKGROUND_PNG = "background.png";
+    public static final String PACK_PACK = "pack.pack";
 
     public static Assets getInstance() {
         return ourInstance;
@@ -35,23 +51,16 @@ public class Assets {
     public void loadAssets(ScreenManager.ScreenType type) {
         switch (type) {
             case MENU:
-                assetManager.load("rpg.pack", TextureAtlas.class);
-                assetManager.load("background.png", Texture.class);
-                assetManager.load("menuBtn.png", Texture.class);
+                assetManager.load(PACK_PACK, TextureAtlas.class);
+                assetManager.load(BACKGROUND_PNG, Texture.class);
                 assetManager.finishLoading();
-                textureAtlas = assetManager.get("rpg.pack", TextureAtlas.class);
+                textureAtlas = assetManager.get(PACK_PACK, TextureAtlas.class);
                 break;
             case BATTLE:
-                assetManager.load("background.png", Texture.class);
-                assetManager.load(BTN_STAY_HERE, Texture.class);
-                assetManager.load(BTN_NEXT_LEVEL, Texture.class);
-                assetManager.load("rpg.pack", TextureAtlas.class);
-                assetManager.load("btnMeleeAttack.png", Texture.class);
-                assetManager.load("btnHeal.png", Texture.class);
-                assetManager.load("btnDefence.png", Texture.class);
-                assetManager.load("actionPanel.png", Texture.class);
+                assetManager.load(BACKGROUND_PNG, Texture.class);
+                assetManager.load(PACK_PACK, TextureAtlas.class);
                 assetManager.finishLoading();
-                textureAtlas = assetManager.get("rpg.pack", TextureAtlas.class);
+                textureAtlas = assetManager.get(PACK_PACK, TextureAtlas.class);
                 break;
         }
     }

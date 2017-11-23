@@ -30,7 +30,7 @@ public class BattleScreen implements Screen {
     private List<Unit> units;
     private int currentUnitIndex;
     private Unit currentUnit;
-    private TextureRegion textureSelector;
+    private TextureRegion textureRegion;
     private Texture backGround;
 
 
@@ -53,8 +53,6 @@ public class BattleScreen implements Screen {
     public void show() {
         createStayPoints();
 
-
-
         units = new ArrayList<Unit>();
 
         GenerateUnit.getInstance().setup(this);
@@ -64,20 +62,18 @@ public class BattleScreen implements Screen {
         Gdx.input.setInputProcessor(mip);
 
 
-        backGround = Assets.getInstance().getAssetManager().get("background.png", Texture.class);
+        backGround = Assets.getInstance().getAssetManager().get(Assets.BACKGROUND_PNG, Texture.class);
 
         // Шрифты
-//        font = StyleText.getInstance().getTextSize14();
         GameText.getInstance().gameTextSetup();
 
-
-        textureSelector = Assets.getInstance().getAtlas().findRegion("selector");
+        textureRegion = Assets.getInstance().getAtlas().findRegion(Assets.SELECTOR);
 
         currentUnitIndex = 0;
         currentUnit = units.get(currentUnitIndex);
         specialFXEmitter = new SpecialFXEmitter();
         createGUI();
-        InputMultiplexer im = new InputMultiplexer(stage, mip);
+        InputMultiplexer im = new InputMultiplexer(mip, stage);
         Gdx.input.setInputProcessor(im);
         animationTimer = 0.0f;
     }
@@ -190,10 +186,11 @@ public class BattleScreen implements Screen {
         batch.draw(backGround,0,0);
 
         batch.setColor(1, 1, 0, 0.8f);
-        batch.draw(textureSelector, currentUnit.getPosition().x, currentUnit.getPosition().y - 5);
+        batch.draw(textureRegion, currentUnit.getPosition().x, currentUnit.getPosition().y - 5);
+
         if (isHeroTurn() && currentUnit.getTarget() != null) {
             batch.setColor(1, 0, 0, 0.8f);
-            batch.draw(textureSelector, currentUnit.getTarget().getPosition().x, currentUnit.getTarget().getPosition().y - 5);
+            batch.draw(textureRegion, currentUnit.getTarget().getPosition().x, currentUnit.getTarget().getPosition().y - 5);
         }
         batch.setColor(1, 1, 1, 1);
         for (int i = 0; i < units.size(); i++) {

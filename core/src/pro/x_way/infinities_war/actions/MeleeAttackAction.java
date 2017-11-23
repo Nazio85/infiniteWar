@@ -1,13 +1,12 @@
 package pro.x_way.infinities_war.actions;
 
-import com.badlogic.gdx.graphics.Texture;
-import pro.x_way.infinities_war.*;
 import pro.x_way.infinities_war.Assets;
+import pro.x_way.infinities_war.Calculator;
 import pro.x_way.infinities_war.units.Unit;
 
 public class MeleeAttackAction extends BaseAction {
     public MeleeAttackAction() {
-        super("MELEE_ATTACK", Assets.getInstance().getAssetManager().get("btnMeleeAttack.png", Texture.class));
+        super("MELEE_ATTACK", Assets.BTN_MELEE_ATTACK);
     }
 
     @Override

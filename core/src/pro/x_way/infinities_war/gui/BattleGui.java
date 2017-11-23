@@ -3,7 +3,6 @@ package pro.x_way.infinities_war.gui;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,13 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import java.time.format.TextStyle;
 import java.util.List;
-
-import javax.xml.soap.Text;
 
 import pro.x_way.infinities_war.Assets;
 import pro.x_way.infinities_war.actions.BaseAction;
@@ -29,15 +24,15 @@ import pro.x_way.infinities_war.windows.BattleScreen;
 import pro.x_way.infinities_war.windows.RpgGame;
 
 public class BattleGui {
-    private static final String WINDOW_NEXT_LEVEL = "windowNextLevel";
-    private static final String NEXT_LEVEL = "nextLevel";
-    private static final String STAY_HERE = "stayHere";
     public static final String YOU_WIN = "You win!";
+
+
     private BattleScreen battleScreen;
     private Stage stage;
     private UnitFactory unitFactory;
     private List<Unit> units;
     private Unit currentUnit;
+    private Skin skin;
 
     public BattleGui(BattleScreen battleScreen) {
         this.battleScreen = battleScreen;
@@ -50,24 +45,23 @@ public class BattleGui {
     }
 
     public void createGui(){
-        Skin skinAction = new Skin();
-        prepareTextureForBtnPanel(skinAction);
+        skin = new Skin(Assets.getInstance().getAtlas());
+        prepareTextureForBtnPanel();
         for (Unit unit : units) {
             if (!unit.isAI()) {
                 Group actionPanel = createActionPanel(unit);
                 stage.addActor(actionPanel);
-
-                createBtnForActionPanel(skinAction, unit, actionPanel);
+                createBtnForActionPanel(unit, actionPanel);
             }
         }
 
+//        Create Window nextLevel
         Group windowNextLevel = createWindowNextLevel();
-
-        Skin skin = new Skin();
-        Button buttonStayHere = createBtnStayHere(skin);
-        Button buttonNextLevel = createBtnNextLevel(skin);
+        Button buttonStayHere = createBtnStayHere();
+        Button buttonNextLevel = createBtnNextLevel();
         Label label = createLabelYouWin();
 
+//        Add
         windowNextLevel.addActor(label);
         windowNextLevel.addActor(buttonStayHere);
         windowNextLevel.addActor(buttonNextLevel);
@@ -75,8 +69,6 @@ public class BattleGui {
     }
 
     private Label createLabelYouWin() {
-        Skin skin = new Skin();
-        skin.add(YOU_WIN, Assets.getInstance().getAssetManager().get(Assets.BTN_NEXT_LEVEL, Texture.class));
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = StyleText.getInstance().createFont36();
         labelStyle.fontColor = Color.WHITE;
@@ -86,20 +78,19 @@ public class BattleGui {
         return label;
     }
 
-    private Button createBtnStayHere(Skin skinBtnNextLevel) {
-        skinBtnNextLevel.add(STAY_HERE, Assets.getInstance().getAssetManager().get(Assets.BTN_STAY_HERE, Texture.class));
+    private Button createBtnStayHere() {
         Button.ButtonStyle buttonStyleStayHere = new Button.ButtonStyle();
-        buttonStyleStayHere.up = skinBtnNextLevel.newDrawable(STAY_HERE);
-        buttonStyleStayHere.down = skinBtnNextLevel.newDrawable(STAY_HERE, Color.GRAY);
-        skinBtnNextLevel.add(STAY_HERE, buttonStyleStayHere);
-        Button buttonStayHere = new Button(skinBtnNextLevel, STAY_HERE);
+        buttonStyleStayHere.up = skin.newDrawable(Assets.BTN_STAY_HERE);
+        buttonStyleStayHere.down = skin.newDrawable(Assets.BTN_STAY_HERE, Color.GRAY);
+        skin.add(Assets.BTN_STAY_HERE, buttonStyleStayHere);
+        Button buttonStayHere = new Button(skin, Assets.BTN_STAY_HERE);
         buttonStayHere.setPosition(20,20);
         return buttonStayHere;
     }
 
     private Group createActionPanel(Unit unit) {
         Group actionPanel = new Group();
-        Image image = new Image(Assets.getInstance().getAssetManager().get("actionPanel.png", Texture.class));
+        Image image = new Image(Assets.getInstance().getAtlas().findRegion(Assets.ACTION_PANEL));
         actionPanel.addActor(image);
         actionPanel.setPosition(RpgGame.SCREEN_WIDTH / 2 - 840 / 2, 5);
         actionPanel.setVisible(false);
@@ -107,12 +98,12 @@ public class BattleGui {
         return actionPanel;
     }
 
-    private void createBtnForActionPanel(Skin skinAction, final Unit o, Group actionPanel) {
+    private void createBtnForActionPanel(final Unit o, Group actionPanel) {
         int counter = 0;
         final Unit innerUnit = o;
         for (BaseAction a : o.getActions()) {
             final BaseAction baseAction = a;
-            Button btn = new Button(skinAction, a.getName());
+            Button btn = new Button(skin, a.getName());
             btn.setPosition(30 + counter * 100, 30);
             btn.addListener(new ChangeListener() {
                 @Override
@@ -129,23 +120,22 @@ public class BattleGui {
         }
     }
 
-    private void prepareTextureForBtnPanel(Skin skinAction) {
+    private void prepareTextureForBtnPanel() {
         List<BaseAction> actions = unitFactory.getActions();
         for (BaseAction action : actions) {
-            skinAction.add(action.getName(), action.getBtnTexture());
             Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
-            buttonStyle.up = skinAction.newDrawable(action.getName());
-            skinAction.add(action.getName(), buttonStyle);
+            buttonStyle.up = skin.newDrawable(action.getBtnTexture());
+            buttonStyle.down = skin.newDrawable(action.getBtnTexture(), Color.GRAY);
+            skin.add(action.getName(), buttonStyle);
         }
     }
 
-    private Button createBtnNextLevel(Skin skinBtnNextLevel) {
-        skinBtnNextLevel.add(NEXT_LEVEL, Assets.getInstance().getAssetManager().get(Assets.BTN_NEXT_LEVEL, Texture.class));
+    private Button createBtnNextLevel() {
         Button.ButtonStyle buttonStyleNextLevel = new Button.ButtonStyle();
-        buttonStyleNextLevel.up = skinBtnNextLevel.newDrawable(NEXT_LEVEL);
-        buttonStyleNextLevel.down = skinBtnNextLevel.newDrawable(NEXT_LEVEL, Color.GRAY);
-        skinBtnNextLevel.add(NEXT_LEVEL, buttonStyleNextLevel);
-        Button buttonNextLevel = new Button(skinBtnNextLevel, NEXT_LEVEL);
+        buttonStyleNextLevel.up = skin.newDrawable(Assets.BTN_NEXT_LEVEL);
+        buttonStyleNextLevel.down = skin.newDrawable(Assets.BTN_NEXT_LEVEL, Color.GRAY);
+        skin.add(Assets.BTN_NEXT_LEVEL, buttonStyleNextLevel);
+        Button buttonNextLevel = new Button(skin, Assets.BTN_NEXT_LEVEL);
         buttonNextLevel.setPosition(160,20);
         return buttonNextLevel;
     }
@@ -158,7 +148,7 @@ public class BattleGui {
         windowNextLevel.addActor(image);
         windowNextLevel.setPosition(RpgGame.SCREEN_WIDTH / 2 - 150, RpgGame.SCREEN_HEIGHT / 2);
         windowNextLevel.setVisible(false);
-        windowNextLevel.setName(WINDOW_NEXT_LEVEL);
+        windowNextLevel.setName(Assets.WINDOW_NEXT_LEVEL);
         return windowNextLevel;
     }
 }

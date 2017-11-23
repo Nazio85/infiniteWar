@@ -1,7 +1,7 @@
 
 texturePack1.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 explosion64
   rotate: false
@@ -87,30 +87,30 @@ btnHeal
   orig: 80, 80
   offset: 0, 0
   index: -1
-selector
-  rotate: false
-  xy: 878, 236
-  size: 90, 30
-  orig: 90, 30
-  offset: 0, 0
-  index: -1
 btnNextLevel
   rotate: false
-  xy: 516, 456
-  size: 91, 24
-  orig: 91, 24
+  xy: 878, 236
+  size: 120, 30
+  orig: 120, 30
   offset: 0, 0
   index: -1
 btnStayHere
   rotate: false
-  xy: 516, 482
-  size: 91, 24
-  orig: 91, 24
+  xy: 878, 268
+  size: 120, 30
+  orig: 120, 30
+  offset: 0, 0
+  index: -1
+selector
+  rotate: false
+  xy: 516, 456
+  size: 90, 30
+  orig: 90, 30
   offset: 0, 0
   index: -1
 hpBar
   rotate: false
-  xy: 878, 268
+  xy: 516, 488
   size: 90, 20
   orig: 90, 20
   offset: 0, 0

@@ -3,10 +3,10 @@ package pro.x_way.infinities_war.windows;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,7 +21,7 @@ import pro.x_way.infinities_war.text.StyleText;
 
 public class MenuScreen implements Screen {
     private Texture backgroundTexture;
-    private Texture buttonTexture;
+    private TextureAtlas.AtlasRegion buttonTexture;
     private Music music;
     private SpriteBatch batch;
 
@@ -42,10 +42,10 @@ public class MenuScreen implements Screen {
     public void show() {
         //Текстуры
         backgroundTexture = Assets.getInstance().getAssetManager().get("background.png", Texture.class);
-        buttonTexture = Assets.getInstance().getAssetManager().get("menuBtn.png", Texture.class);
-        music = Gdx.audio.newMusic(Gdx.files.internal("Jumping bat.wav"));
-        music.setLooping(true);
-        music.play();
+//        buttonTexture = Assets.getInstance().getAtlas().findRegion("menuBtn");
+//        music = Gdx.audio.newMusic(Gdx.files.internal("Jumping bat.wav"));
+//        music.setLooping(true);
+//        music.play();
 
         //Шрифты
         font36 = StyleText.getInstance().createFont36();
@@ -56,10 +56,10 @@ public class MenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin();
-        skin.add("textureButton", buttonTexture);
+        skin.addRegions(Assets.getInstance().getAtlas());
         skin.add("font36", font36);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.getDrawable("textureButton");
+        textButtonStyle.up = skin.getDrawable(Assets.MENU_BTN);
         textButtonStyle.font = font36;
         skin.add("tbs", textButtonStyle);
 
@@ -121,7 +121,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        music.dispose();
+//        music.dispose();
         backgroundTexture.dispose();
         font36.dispose();
         font96.dispose();
