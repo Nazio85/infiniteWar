@@ -54,10 +54,7 @@ public class BattleScreen implements Screen {
     public void show() {
         createStayPoints();
 
-
-
-//        GenerateUnit.getInstance().setup(this);
-//        unitFactory = new UnitFactory();
+        Session.getInstance().startGame();
         Session.getInstance().loadFight(this);
         units = Session.getInstance().getAllUnit();
 

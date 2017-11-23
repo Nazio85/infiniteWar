@@ -18,7 +18,7 @@ public class UnitFactory {
         KNIGHT(Assets.getInstance().getAtlas().findRegion(Assets.KNIGHT)),
         SKELETON(Assets.getInstance().getAtlas().findRegion(Assets.SKELETON));
 
-        private TextureAtlas.AtlasRegion textureAtlas;
+        public TextureAtlas.AtlasRegion textureAtlas;
 
 
         UnitType(TextureAtlas.AtlasRegion textureAtlas) {
@@ -42,7 +42,7 @@ public class UnitFactory {
                 if (!me.getBattleScreen().canIMakeTurn()) {
                     return false;
                 }
-                Unit target = null;
+                Unit target;
                 do {
                     target = me.getBattleScreen().getUnits().get((int) (Math.random() * me.getBattleScreen().getUnits().size()));
                 } while (target.isAI());
@@ -98,7 +98,7 @@ public class UnitFactory {
     }
 
     public Unit createUnit(UnitType unitType, boolean isHuman, int level) {
-        Unit unit = new Unit(unitType, unitType.textureAtlas, getStats(unitType));
+        Unit unit = new Unit(unitType, getStats(unitType));
         unit.setLevel(level);
         addActions(unitType, unit);
 

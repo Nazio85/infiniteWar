@@ -28,21 +28,7 @@ public class Unit {
     private final UnitFactory.UnitType unitType;
 
 
-    public void reload(TextureRegion texture, List<BaseAction> actions) {
-        this.texture = texture;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
-        this.actions = actions;
-        this.effects.clear();
-        this.animationSpeed = 0.2f;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
-        this.maxFrame = this.frames[0].length;
-        this.maxAnimationType = this.frames.length - 1;
-        this.currentAnimation = AnimationType.IDLE;
-    }
 
-    public UnitFactory.UnitType getType() {
-        return unitType;
-    }
 
     public enum AnimationType {
         IDLE(0), ATTACK(1);
@@ -90,9 +76,9 @@ public class Unit {
     private List<Effect> effects;
 
 
-    public Unit(UnitFactory.UnitType unitType, TextureRegion texture, Stats stats) {
+    public Unit(UnitFactory.UnitType unitType, Stats stats) {
         this.unitType = unitType;
-        this.texture = texture;
+        this.texture = unitType.textureAtlas;
         this.stats = stats;
         this.effects = new ArrayList<Effect>();
         this.position = new Vector2(0, 0);
@@ -104,23 +90,24 @@ public class Unit {
         this.currentAnimation = AnimationType.IDLE;
     }
 
+
     public void render(SpriteBatch batch) {
         if (takeDamageAction > 0) {
             batch.setColor(1f, 1f - takeDamageAction, 1f - takeDamageAction, 1f);
         }
         float dx = (50f * (float) Math.sin((1f - attackAction) * 3.14f));
-        if (flip) dx *= -1;
+        if (!flip) dx *= -1;
         float ang = 0;
         if (!isAlive()) ang = 90;
         int n = currentAnimation.number;
         if (n > maxAnimationType) {
             n = 0;
         }
-        if (flip) {
+        if (!flip) {
             frames[n][animationFrame].flip(true, false);
         }
         batch.draw(frames[n][animationFrame], position.x + dx, position.y, 0, 0, WIDTH, HEIGHT, 1, 1, ang);
-        if (flip) {
+        if (!flip) {
             frames[n][animationFrame].flip(true, false);
         }
         batch.setColor(1f, 1f, 1f, 1f);
