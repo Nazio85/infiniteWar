@@ -8,17 +8,17 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import pro.x_way.infinities_war.Calculator;
 import pro.x_way.infinities_war.actions.BaseAction;
 import pro.x_way.infinities_war.effects.Effect;
-import pro.x_way.infinities_war.text.FlyingText;
 import pro.x_way.infinities_war.text.GameText;
 import pro.x_way.infinities_war.windows.BattleScreen;
 
-public class Unit {
+public class Unit implements Serializable{
     public static final int FULL_STATUS = 90;
     public static final int HEIGHT_STATUS_BAR_ROW = 13;
     public static final int HEIGHT_STATUS_BAR = 26;
@@ -27,16 +27,6 @@ public class Unit {
     public static final int TYPE_HILL = 1;
     private final UnitFactory.UnitType unitType;
 
-
-
-
-    public enum AnimationType {
-        IDLE(0), ATTACK(1);
-        int number;
-        AnimationType(int number) {
-            this.number = number;
-        }
-    }
 
     private BattleScreen battleScreen;
     private Unit target;
@@ -76,20 +66,37 @@ public class Unit {
     private List<Effect> effects;
 
 
+    public enum AnimationType {
+        IDLE(0), ATTACK(1);
+        int number;
+        AnimationType(int number) {
+            this.number = number;
+        }
+    }
+
     public Unit(UnitFactory.UnitType unitType, Stats stats) {
         this.unitType = unitType;
         this.texture = unitType.textureAtlas;
+        this.frames = this.texture.split(WIDTH, HEIGHT);
         this.stats = stats;
         this.effects = new ArrayList<Effect>();
         this.position = new Vector2(0, 0);
         this.actions = new ArrayList<BaseAction>();
         this.animationSpeed = 0.2f;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
         this.maxFrame = this.frames[0].length;
         this.maxAnimationType = this.frames.length - 1;
         this.currentAnimation = AnimationType.IDLE;
     }
 
+    public void reload(UnitFactory.UnitType unitType) {
+        this.texture = unitType.textureAtlas;
+        this.frames = this.texture.split(WIDTH, HEIGHT);
+        this.maxFrame = this.frames[0].length;
+        this.actions = new ArrayList<BaseAction>();
+        this.animationSpeed = 0.2f;
+        this.maxAnimationType = this.frames.length - 1;
+        this.currentAnimation = AnimationType.IDLE;
+    }
 
     public void render(SpriteBatch batch) {
         if (takeDamageAction > 0) {
@@ -235,6 +242,10 @@ public class Unit {
 
     public int getMp() {
         return mp;
+    }
+
+    public UnitFactory.UnitType getUnitType() {
+        return unitType;
     }
 
     public List<BaseAction> getActions() {

@@ -54,7 +54,8 @@ public class BattleScreen implements Screen {
     public void show() {
         createStayPoints();
 
-        Session.getInstance().startGame();
+//        Session.getInstance().startGame();
+        Session.getInstance().reloadUnit();
         Session.getInstance().loadFight(this);
         units = Session.getInstance().getAllUnit();
 
@@ -78,6 +79,7 @@ public class BattleScreen implements Screen {
         InputMultiplexer im = new InputMultiplexer(mip, stage);
         Gdx.input.setInputProcessor(im);
         animationTimer = 0.0f;
+
     }
 
     private void createStayPoints() {

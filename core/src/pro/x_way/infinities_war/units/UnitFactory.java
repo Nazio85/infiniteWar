@@ -14,6 +14,8 @@ import pro.x_way.infinities_war.actions.RestAction;
 
 
 public class UnitFactory {
+
+
     public enum UnitType {
         KNIGHT(Assets.getInstance().getAtlas().findRegion(Assets.KNIGHT)),
         SKELETON(Assets.getInstance().getAtlas().findRegion(Assets.SKELETON));
@@ -95,19 +97,29 @@ public class UnitFactory {
                 break;
         }
 
+
     }
 
-    public Unit createUnit(UnitType unitType, boolean isHuman, int level) {
+    public Unit createUnit(UnitType unitType, boolean isPlayer, int level) {
         Unit unit = new Unit(unitType, getStats(unitType));
         unit.setLevel(level);
         addActions(unitType, unit);
 
-        if (!isHuman) {
+        if (!isPlayer) {
             unit.setAutopilot(aiBank.get(0));
         }
-        unit.setFlip(isHuman);
-        unit.setPlayer(isHuman);
+        unit.setFlip(isPlayer);
+        unit.setPlayer(isPlayer);
         return unit;
+    }
+
+    public void reload(Unit unit) {
+        UnitType unitType = unit.getUnitType();
+        unit.reload(unitType);
+        addActions(unitType, unit);
+        if (!unit.isPlayer()) {
+            unit.setAutopilot(aiBank.get(0));
+        }
     }
 
 

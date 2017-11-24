@@ -64,6 +64,13 @@ public class Session implements Serializable {
         return units;
     }
 
+    public void reloadUnit() {
+        List<Unit> units = getAllUnit();
+        for (int i = 0; i < units.size(); i++) {
+            unitFactory.reload(units.get(i));
+        }
+    }
+
     private enum Level{
         leve1(20), level2(40);
 
