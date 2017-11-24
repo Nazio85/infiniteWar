@@ -15,12 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.List;
 
 import pro.x_way.infinities_war.Assets;
+import pro.x_way.infinities_war.Session;
 import pro.x_way.infinities_war.actions.BaseAction;
 import pro.x_way.infinities_war.text.StyleText;
 import pro.x_way.infinities_war.units.Unit;
 import pro.x_way.infinities_war.units.UnitFactory;
 import pro.x_way.infinities_war.windows.BattleScreen;
 import pro.x_way.infinities_war.windows.RpgGame;
+import pro.x_way.infinities_war.windows.ScreenManager;
 
 public class BattleGui {
     public static final String YOU_WIN = "You win!";
@@ -36,7 +38,7 @@ public class BattleGui {
     public BattleGui(BattleScreen battleScreen) {
         this.battleScreen = battleScreen;
         stage = battleScreen.getStage();
-        unitFactory = new UnitFactory();
+        unitFactory = Session.getUnitFactory();
         units = battleScreen.getUnits();
         currentUnit = battleScreen.getCurrentUnit();
 
@@ -53,6 +55,20 @@ public class BattleGui {
                 createBtnForActionPanel(unit, actionPanel);
             }
         }
+
+
+
+        createBtnStyle(Assets.GO_TO_MENU);
+        Button buttonGoToMenu = new Button(skin, Assets. GO_TO_MENU);
+        buttonGoToMenu.setPosition(1160,600);
+        buttonGoToMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.MENU);
+            }
+        });
+        stage.addActor(buttonGoToMenu);
+
 
 //        Create Window nextLevel
         Group windowNextLevel = createWindowNextLevel();
@@ -78,13 +94,25 @@ public class BattleGui {
     }
 
     private Button createBtnStayHere() {
-        Button.ButtonStyle buttonStyleStayHere = new Button.ButtonStyle();
-        buttonStyleStayHere.up = skin.newDrawable(Assets.BTN_STAY_HERE);
-        buttonStyleStayHere.down = skin.newDrawable(Assets.BTN_STAY_HERE, Color.GRAY);
-        skin.add(Assets.BTN_STAY_HERE, buttonStyleStayHere);
+        createBtnStyle(Assets.BTN_STAY_HERE);
         Button buttonStayHere = new Button(skin, Assets.BTN_STAY_HERE);
         buttonStayHere.setPosition(20,20);
         return buttonStayHere;
+    }
+
+    private Button createBtnNextLevel() {
+        createBtnStyle(Assets.BTN_NEXT_LEVEL);
+        Button buttonNextLevel = new Button(skin, Assets.BTN_NEXT_LEVEL);
+        buttonNextLevel.setPosition(160,20);
+        return buttonNextLevel;
+    }
+
+    private void createBtnStyle(String name){
+        Button.ButtonStyle buttonStyleNextLevel = new Button.ButtonStyle();
+        buttonStyleNextLevel.up = skin.newDrawable(name);
+        buttonStyleNextLevel.down = skin.newDrawable(name, Color.GRAY);
+        skin.add(name, buttonStyleNextLevel);
+        System.out.println(name);
     }
 
     private Group createActionPanel(Unit unit) {
@@ -102,12 +130,12 @@ public class BattleGui {
         final Unit innerUnit = o;
         for (BaseAction a : o.getActions()) {
             final BaseAction baseAction = a;
-            Button btn = new Button(skin, a.getName());
+            Button btn = new Button(skin, a.getBtnTexture());
             btn.setPosition(30 + counter * 100, 30);
             btn.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if (!innerUnit.isAI()) {
+                    if (innerUnit.isPlayer()) {
                         if (baseAction.action(innerUnit)) {
                             battleScreen.nextTurn();
                         }
@@ -122,24 +150,9 @@ public class BattleGui {
     private void prepareTextureForBtnPanel() {
         List<BaseAction> actions = unitFactory.getActions();
         for (BaseAction action : actions) {
-            Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
-            buttonStyle.up = skin.newDrawable(action.getBtnTexture());
-            buttonStyle.down = skin.newDrawable(action.getBtnTexture(), Color.GRAY);
-            skin.add(action.getName(), buttonStyle);
+            createBtnStyle(action.getBtnTexture());
         }
     }
-
-    private Button createBtnNextLevel() {
-        Button.ButtonStyle buttonStyleNextLevel = new Button.ButtonStyle();
-        buttonStyleNextLevel.up = skin.newDrawable(Assets.BTN_NEXT_LEVEL);
-        buttonStyleNextLevel.down = skin.newDrawable(Assets.BTN_NEXT_LEVEL, Color.GRAY);
-        skin.add(Assets.BTN_NEXT_LEVEL, buttonStyleNextLevel);
-        Button buttonNextLevel = new Button(skin, Assets.BTN_NEXT_LEVEL);
-        buttonNextLevel.setPosition(160,20);
-        return buttonNextLevel;
-    }
-
-
 
     private Group createWindowNextLevel() {
         Group windowNextLevel = new Group();

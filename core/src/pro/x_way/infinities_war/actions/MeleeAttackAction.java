@@ -6,7 +6,7 @@ import pro.x_way.infinities_war.units.Unit;
 
 public class MeleeAttackAction extends BaseAction {
     public MeleeAttackAction() {
-        super("MELEE_ATTACK", Assets.BTN_MELEE_ATTACK);
+        super(Assets.BTN_MELEE_ATTACK);
     }
 
     @Override

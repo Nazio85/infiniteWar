@@ -17,15 +17,8 @@ public class UnitFactory {
 
 
     public enum UnitType {
-        KNIGHT(Assets.getInstance().getAtlas().findRegion(Assets.KNIGHT)),
-        SKELETON(Assets.getInstance().getAtlas().findRegion(Assets.SKELETON));
-
-        public TextureAtlas.AtlasRegion textureAtlas;
-
-
-        UnitType(TextureAtlas.AtlasRegion textureAtlas) {
-            this.textureAtlas = textureAtlas;
-        }
+        KNIGHT,
+        SKELETON
     }
 
     private List<Autopilot> aiBank;
@@ -33,6 +26,16 @@ public class UnitFactory {
 
     public List<BaseAction> getActions() {
         return actions;
+    }
+
+    public TextureAtlas.AtlasRegion getTexture(UnitType unitType){
+        switch (unitType){
+            case KNIGHT:
+                return Assets.getInstance().getAtlas().findRegion(Assets.KNIGHT);
+            case SKELETON:
+                return Assets.getInstance().getAtlas().findRegion(Assets.SKELETON);
+        }
+        return null;
     }
 
     public UnitFactory() {
@@ -47,7 +50,7 @@ public class UnitFactory {
                 Unit target;
                 do {
                     target = me.getBattleScreen().getUnits().get((int) (Math.random() * me.getBattleScreen().getUnits().size()));
-                } while (target.isAI());
+                } while (!target.isPlayer());
                 me.setTarget(target);
                 me.getActions().get(0).action(me);
                 return true;
@@ -101,21 +104,20 @@ public class UnitFactory {
     }
 
     public Unit createUnit(UnitType unitType, boolean isPlayer, int level) {
-        Unit unit = new Unit(unitType, getStats(unitType));
+        Unit unit = new Unit(getTexture(unitType), unitType, getStats(unitType));
         unit.setLevel(level);
         addActions(unitType, unit);
 
         if (!isPlayer) {
             unit.setAutopilot(aiBank.get(0));
         }
-        unit.setFlip(isPlayer);
         unit.setPlayer(isPlayer);
         return unit;
     }
 
     public void reload(Unit unit) {
         UnitType unitType = unit.getUnitType();
-        unit.reload(unitType);
+        unit.reload(getTexture(unitType));
         addActions(unitType, unit);
         if (!unit.isPlayer()) {
             unit.setAutopilot(aiBank.get(0));

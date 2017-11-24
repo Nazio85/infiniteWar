@@ -28,6 +28,7 @@ public class Assets {
     public static final String HP_BAR = "hpBar";
     public static final String BACKGROUND_PNG = "background.png";
     public static final String PACK_PACK = "pack.pack";
+    public static final String GO_TO_MENU = "goToMenu";
 
     public static Assets getInstance() {
         return ourInstance;

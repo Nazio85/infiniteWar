@@ -5,7 +5,7 @@ import pro.x_way.infinities_war.units.Unit;
 
 public class RestAction extends BaseAction {
     public RestAction() {
-        super("REST", Assets.BTN_HEAL);
+        super(Assets.BTN_HEAL);
     }
 
     @Override

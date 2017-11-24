@@ -6,7 +6,7 @@ import pro.x_way.infinities_war.units.Unit;
 
 public class DefenceStanceAction extends BaseAction {
     public DefenceStanceAction() {
-        super("DEFENCE", Assets.BTN_DEFENCE);
+        super(Assets.BTN_DEFENCE);
     }
 
     @Override

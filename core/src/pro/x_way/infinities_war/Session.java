@@ -14,12 +14,12 @@ import pro.x_way.infinities_war.windows.BattleScreen;
 
 public class Session implements Serializable {
     private static final Session ourInstance = new Session();
-    private UnitFactory unitFactory;
+    private static UnitFactory unitFactory = new UnitFactory();
 
-    private static Unit[] columnOne = new Unit[2];
-    private static Unit[] columnTwo = new Unit[2];
-    private static Unit[] columnTree = new Unit[2];
-    private static Unit[] columnFour = new Unit[2];
+    private Unit[] columnOne = new Unit[2];
+    private Unit[] columnTwo = new Unit[2];
+    private Unit[] columnTree = new Unit[2];
+    private Unit[] columnFour = new Unit[2];
 
     public static Session getInstance() {
         return ourInstance;
@@ -29,7 +29,6 @@ public class Session implements Serializable {
     }
 
     public void startGame(){
-        unitFactory = new UnitFactory();
         createPlayerTeam();
         createAI();
     }
@@ -97,5 +96,7 @@ public class Session implements Serializable {
         }
     }
 
-
+    public static UnitFactory getUnitFactory() {
+        return unitFactory;
+    }
 }

@@ -1,7 +1,7 @@
 
 texturePack1.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 explosion64
   rotate: false
@@ -52,58 +52,65 @@ menuBtn
   orig: 480, 100
   offset: 0, 0
   index: -1
-btnRanged
+goToMenu
   rotate: false
   xy: 878, 154
-  size: 80, 80
-  orig: 80, 80
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
-btnRegen
+btnRanged
   rotate: false
   xy: 910, 304
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
-btnMeleeAttack
+btnRegen
   rotate: false
   xy: 910, 386
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
-btnDefence
+btnMeleeAttack
   rotate: false
   xy: 844, 516
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
-btnHeal
+btnDefence
   rotate: false
   xy: 926, 516
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
+btnHeal
+  rotate: false
+  xy: 2, 760
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
 btnNextLevel
   rotate: false
-  xy: 878, 236
+  xy: 878, 256
   size: 120, 30
   orig: 120, 30
   offset: 0, 0
   index: -1
 btnStayHere
   rotate: false
-  xy: 878, 268
+  xy: 516, 456
   size: 120, 30
   orig: 120, 30
   offset: 0, 0
   index: -1
 selector
   rotate: false
-  xy: 516, 456
+  xy: 638, 456
   size: 90, 30
   orig: 90, 30
   offset: 0, 0

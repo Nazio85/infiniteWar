@@ -3,6 +3,7 @@ package pro.x_way.infinities_war.units;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -18,20 +19,20 @@ import pro.x_way.infinities_war.effects.Effect;
 import pro.x_way.infinities_war.text.GameText;
 import pro.x_way.infinities_war.windows.BattleScreen;
 
-public class Unit implements Serializable{
+public class Unit implements Serializable {
     public static final int FULL_STATUS = 90;
     public static final int HEIGHT_STATUS_BAR_ROW = 13;
     public static final int HEIGHT_STATUS_BAR = 26;
 
     public static final int TYPE_DAMAGE = -1;
     public static final int TYPE_HILL = 1;
-    private final UnitFactory.UnitType unitType;
+    private UnitFactory.UnitType unitType;
 
 
     private BattleScreen battleScreen;
-    private Unit target;
+    transient private Unit target;
     private boolean isPlayer;
-    private TextureRegion texture;
+    transient private TextureRegion texture;
     private int hp;
     private int mp;
     private int maxHp;
@@ -41,20 +42,19 @@ public class Unit implements Serializable{
     private Rectangle rect;
     private Autopilot autopilot;
     private Vector2 position;
-    private boolean flip;
     private float attackAction;
     private float takeDamageAction;
     private Stats stats;
     private Group actionPanel;
 
     private List<BaseAction> actions;
-    private TextureRegion[][] frames;
-    private AnimationType currentAnimation;
-    private float animationTime;
-    private float animationSpeed;
-    private int maxFrame;
-    private int maxAnimationType;
-    private int animationFrame;
+    //    transient private TextureRegion[][] frames;
+    transient private AnimationType currentAnimation;
+    //    transient private float animationTime;
+//    transient private float animationSpeed;
+//    transient private int maxFrame;
+//    transient private int maxAnimationType;
+//    transient private int animationFrame;
     private final int WIDTH = 90;
     private final int HEIGHT = 150;
 
@@ -69,32 +69,33 @@ public class Unit implements Serializable{
     public enum AnimationType {
         IDLE(0), ATTACK(1);
         int number;
+
         AnimationType(int number) {
             this.number = number;
         }
     }
 
-    public Unit(UnitFactory.UnitType unitType, Stats stats) {
+    public Unit(TextureAtlas.AtlasRegion texture, UnitFactory.UnitType unitType, Stats stats) {
         this.unitType = unitType;
-        this.texture = unitType.textureAtlas;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
+        this.texture = texture;
+//        this.frames = this.texture.split(WIDTH, HEIGHT);
         this.stats = stats;
         this.effects = new ArrayList<Effect>();
         this.position = new Vector2(0, 0);
         this.actions = new ArrayList<BaseAction>();
-        this.animationSpeed = 0.2f;
-        this.maxFrame = this.frames[0].length;
-        this.maxAnimationType = this.frames.length - 1;
+//        this.animationSpeed = 0.2f;
+//        this.maxFrame = this.frames[0].length;
+//        this.maxAnimationType = this.frames.length - 1;
         this.currentAnimation = AnimationType.IDLE;
     }
 
-    public void reload(UnitFactory.UnitType unitType) {
-        this.texture = unitType.textureAtlas;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
-        this.maxFrame = this.frames[0].length;
+    public void reload(TextureAtlas.AtlasRegion texture) {
+        this.texture = texture;
+//        this.frames = this.texture.split(WIDTH, HEIGHT);
+//        this.maxFrame = this.frames[0].length;
         this.actions = new ArrayList<BaseAction>();
-        this.animationSpeed = 0.2f;
-        this.maxAnimationType = this.frames.length - 1;
+//        this.animationSpeed = 0.2f;
+//        this.maxAnimationType = this.frames.length - 1;
         this.currentAnimation = AnimationType.IDLE;
     }
 
@@ -103,20 +104,14 @@ public class Unit implements Serializable{
             batch.setColor(1f, 1f - takeDamageAction, 1f - takeDamageAction, 1f);
         }
         float dx = (50f * (float) Math.sin((1f - attackAction) * 3.14f));
-        if (!flip) dx *= -1;
+        if (!isPlayer) dx *= -1;
         float ang = 0;
         if (!isAlive()) ang = 90;
-        int n = currentAnimation.number;
-        if (n > maxAnimationType) {
-            n = 0;
-        }
-        if (!flip) {
-            frames[n][animationFrame].flip(true, false);
-        }
-        batch.draw(frames[n][animationFrame], position.x + dx, position.y, 0, 0, WIDTH, HEIGHT, 1, 1, ang);
-        if (!flip) {
-            frames[n][animationFrame].flip(true, false);
-        }
+
+        if (!isPlayer) texture.flip(true, false); // разворот врагов
+        batch.draw(texture, position.x + dx, position.y, 0, 0, WIDTH, HEIGHT, 1, 1, ang);
+        if (!isPlayer) texture.flip(true, false); // разворот врагов
+
         batch.setColor(1f, 1f, 1f, 1f);
         if (isAlive()) {
             statusBar(batch);
@@ -150,9 +145,9 @@ public class Unit implements Serializable{
     }
 
     public void update(float dt) {
-        animationTime += dt;
-        animationFrame = (int) (animationTime / animationSpeed);
-        animationFrame = animationFrame % maxFrame;
+//        animationTime += dt;
+//        animationFrame = (int) (animationTime / animationSpeed);
+//        animationFrame = animationFrame % maxFrame;
         if (takeDamageAction > 0) {
             takeDamageAction -= dt;
             if (takeDamageAction <= 0) {
@@ -284,9 +279,6 @@ public class Unit implements Serializable{
         return WIDTH;
     }
 
-    public boolean isAI() {
-        return autopilot != null;
-    }
 
     public boolean isMyTeammate(boolean isPlayer) {
         return this.isPlayer == isPlayer;
@@ -335,10 +327,6 @@ public class Unit implements Serializable{
 
     public void setActions(List<BaseAction> actions) {
         this.actions = actions;
-    }
-
-    public void setFlip(boolean flip) {
-        this.flip = flip;
     }
 
     public void setTarget(Unit target) {

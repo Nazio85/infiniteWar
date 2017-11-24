@@ -3,6 +3,7 @@ package pro.x_way.infinities_war.windows;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +22,10 @@ import pro.x_way.infinities_war.text.StyleText;
 
 
 public class MenuScreen implements Screen {
+    public static final String START_NEW_GAME = "START NEW GAME";
+    public static final String CONTINUE_NEW_GAME = "CONTINUE NEW GAME";
+    public static final String EXIT_GAME = "EXIT GAME";
+    public static final String BUTTON_STYLE = "tbs";
     private Texture backgroundTexture;
     private TextureAtlas.AtlasRegion buttonTexture;
     private Music music;
@@ -59,16 +64,17 @@ public class MenuScreen implements Screen {
         skin = new Skin();
         skin.addRegions(Assets.getInstance().getAtlas());
         skin.add("font36", font36);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.getDrawable(Assets.MENU_BTN);
-        textButtonStyle.font = font36;
-        skin.add("tbs", textButtonStyle);
+        TextButton.TextButtonStyle textButtonStyle = createButtonStyle();
+        skin.add(BUTTON_STYLE, textButtonStyle);
 
-        Button btnNewGame = new TextButton("START NEW GAME", skin, "tbs");
-        Button btnExitGame = new TextButton("EXIT GAME", skin, "tbs");
-        btnNewGame.setPosition(640 - 240, 300);
-        btnExitGame.setPosition(640 - 240, 180);
+        Button btnNewGame = new TextButton(START_NEW_GAME, skin, BUTTON_STYLE);
+        Button btnContinueGame = new TextButton(CONTINUE_NEW_GAME, skin, BUTTON_STYLE);
+        Button btnExitGame = new TextButton(EXIT_GAME, skin, BUTTON_STYLE);
+        btnNewGame.setPosition(640 - 240, 360);
+        btnContinueGame.setPosition(640 - 240, 240);
+        btnExitGame.setPosition(640 - 240, 120);
         stage.addActor(btnNewGame);
+        stage.addActor(btnContinueGame);
         stage.addActor(btnExitGame);
 
         btnNewGame.addListener(new ChangeListener() {
@@ -78,12 +84,29 @@ public class MenuScreen implements Screen {
                 ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
             }
         });
+
+        btnContinueGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+//                GameSession.getInstance().loadSession();
+                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
+//                GameSession.getInstance().saveSession();
+            }
+        });
         btnExitGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.exit();
             }
         });
+    }
+
+    private TextButton.TextButtonStyle createButtonStyle() {
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.getDrawable(Assets.MENU_BTN);
+        textButtonStyle.down = skin.newDrawable(Assets.MENU_BTN, Color.GRAY);
+        textButtonStyle.font = font36;
+        return textButtonStyle;
     }
 
     @Override
