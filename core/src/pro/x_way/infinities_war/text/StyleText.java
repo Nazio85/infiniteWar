@@ -20,8 +20,8 @@ public class StyleText {
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     }
 
-    public BitmapFont getTextSize14(){
-        parameter.size = 14;
+    public BitmapFont getTextSize20(){
+        parameter.size = 20;
         parameter.borderColor = Color.BLACK;
         parameter.borderWidth = 1;
         parameter.shadowColor = Color.BLACK;

@@ -1,5 +1,7 @@
 package pro.x_way.infinities_war;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+
 import java.util.List;
 
 import pro.x_way.infinities_war.units.Unit;
@@ -36,7 +38,9 @@ public class Calculator {
     }
 
     public static boolean isMiss(Unit currentUnit, Unit targetUnit) {
+
         int currentUnitDexterity = currentUnit.getStats().getDexterity();
+        System.out.println(targetUnit);
         int targetUnitDexterity = targetUnit.getStats().getDexterity();
 
         if (targetUnitDexterity - currentUnitDexterity < 0 || // this.dexterity -- атакующий
@@ -46,23 +50,24 @@ public class Calculator {
             int difference = targetUnitDexterity - currentUnitDexterity; // во сколько раз принимающий атаку ловчей
             return (int) (Math.random() * 10) > difference;
         }
+
     }
 
-    public static void hideUserPanel(List<Unit> units){
-        for (int i = 0; i < units.size(); i++) {
-            if (units.get(i).getActionPanel() != null) {
-                units.get(i).getActionPanel().setVisible(false);
-            }
-        }
-    }
+//    public static void hideUserPanel(List<Unit> units){
+//        for (int i = 0; i < units.size(); i++) {
+//            if (units.get(i).getActionPanel() != null) {
+//                units.get(i).getActionPanel().setVisible(false);
+//            }
+//        }
+//    }
+//
+//    public static void showUserPanel(Unit currentUnit){
+//        if (currentUnit.getActionPanel() != null) {
+//            currentUnit.getActionPanel().setVisible(true);
+//        }
+//    }
 
-    public static void showUserPanel(Unit currentUnit){
-        if (currentUnit.getActionPanel() != null) {
-            currentUnit.getActionPanel().setVisible(true);
-        }
-    }
-
-    public static Unit giveNextUnitStep(BattleScreen battleScreen){
+    public static Unit giveNextUnitStep(BattleScreen battleScreen) {
         do {
             battleScreen.incrementCurrentUnitIndex();
             if (battleScreen.getCurrentUnitIndex() >= battleScreen.getUnits().size()) {
@@ -95,6 +100,14 @@ public class Calculator {
                 battleScreen.getCurrentUnit().setTarget(battleScreen.getUnits().get(i));
                 break;
             }
+        }
+    }
+
+    public static void showGuiButton(List<Button> buttonList, Unit currentUnit) {
+        for (int i = 0; i < buttonList.size(); i++) {
+            Button button = buttonList.get(i);
+            if (currentUnit.getButtons().contains(button)) button.setVisible(true);
+            else button.setVisible(false);
         }
     }
 }

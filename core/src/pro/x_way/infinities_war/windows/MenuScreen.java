@@ -113,7 +113,7 @@ public class MenuScreen implements Screen {
     public void render(float delta) {
         update(delta);
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0);
+        batch.draw(backgroundTexture, 0, 0,RpgGame.SCREEN_WIDTH, RpgGame.SCREEN_HEIGHT);
         font96.draw(batch, "geek-android-rpg-game", 0, 600 + 20.0f * (float)Math.sin(time), 1280, 1, false);
         batch.end();
         stage.draw();

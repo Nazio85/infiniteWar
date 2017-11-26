@@ -14,7 +14,7 @@ public class GUI {
 
     }
 
-    public void getBattleGui(BattleScreen battleScreen){
-        new BattleGui(battleScreen);
+    public BattleGui getBattleGui(BattleScreen battleScreen){
+        return new BattleGui(battleScreen);
     }
 }

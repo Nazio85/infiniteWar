@@ -10,20 +10,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pro.x_way.infinities_war.Assets;
 import pro.x_way.infinities_war.Calculator;
 import pro.x_way.infinities_war.MyInputProcessor;
 import pro.x_way.infinities_war.Session;
-import pro.x_way.infinities_war.SpecialFXEmitter;
+import pro.x_way.infinities_war.animation.SpecialFXEmitter;
+import pro.x_way.infinities_war.gui.BattleGui;
 import pro.x_way.infinities_war.gui.GUI;
 import pro.x_way.infinities_war.text.GameText;
 import pro.x_way.infinities_war.units.Unit;
-import pro.x_way.infinities_war.units.UnitFactory;
 
 public class BattleScreen implements Screen {
     public static final String WINDOW_NEXT_LEVEL = "windowNextLevel";
@@ -33,13 +33,15 @@ public class BattleScreen implements Screen {
     private Unit currentUnit;
     private TextureRegion textureRegion;
     private Texture backGround;
+    private BattleGui battleGui;
+    private List<Button> buttonList;
 
 
     private Vector2[][] stayPoints;
     private float animationTimer;
     private Stage stage;
-//    public static UnitFactory unitFactory;
 
+//    public static UnitFactory unitFactory;
     private MyInputProcessor mip;
     private SpecialFXEmitter specialFXEmitter;
 
@@ -55,7 +57,7 @@ public class BattleScreen implements Screen {
         createStayPoints();
 
         Session.getInstance().reloadUnit();
-        Session.getInstance().loadFight(this);
+        Session.getInstance().setToMap(this);
         units = Session.getInstance().getAllUnit();
 
 
@@ -82,11 +84,11 @@ public class BattleScreen implements Screen {
     }
 
     private void createStayPoints() {
-        final int LEFT_STAY_POINT_X = 150;
+        final int LEFT_STAY_POINT_X = 100;
         final int TOP_STAY_POINT_Y = 400;
-        final int DISTANCE_BETWEEN_UNITS_X = 200;
-        final int DISTANCE_BETWEEN_UNITS_Y = 200;
-        final int DISTANCE_BETWEEN_TEAMS = 200;
+        final int DISTANCE_BETWEEN_UNITS_X = 250;
+        final int DISTANCE_BETWEEN_UNITS_Y = 230;
+        final int DISTANCE_BETWEEN_TEAMS = 150;
         final int BATTLE_ROW = 2;
         final int BATTLE_COLUMN = 4;
 
@@ -94,7 +96,7 @@ public class BattleScreen implements Screen {
 
         for (int i = 0; i < BATTLE_COLUMN; i++) {
             for (int j = 0; j < BATTLE_ROW; j++) {
-                int x = LEFT_STAY_POINT_X + i * DISTANCE_BETWEEN_UNITS_X + j * 20;
+                int x = LEFT_STAY_POINT_X + (i * DISTANCE_BETWEEN_UNITS_X);
                 if (i > 1) x += DISTANCE_BETWEEN_TEAMS;
                 stayPoints[i][j] = new Vector2(x, TOP_STAY_POINT_Y - j * DISTANCE_BETWEEN_UNITS_Y);
             }
@@ -103,7 +105,8 @@ public class BattleScreen implements Screen {
 
     public void createGUI() {
         stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
-        GUI.getInstance().getBattleGui(this);
+        battleGui = GUI.getInstance().getBattleGui(this);
+        buttonList = battleGui.createGui();
     }
 
 
@@ -123,11 +126,12 @@ public class BattleScreen implements Screen {
 
     public void nextTurn() {
         if (!endGame()){
-            Calculator.hideUserPanel(units);
+//            Calculator.hideUserPanel(units);
             currentUnit = Calculator.giveNextUnitStep(this);
             currentUnit.updateBeforeStep();
-            Calculator.showUserPanel(currentUnit);
+//            Calculator.showUserPanel(currentUnit);
             animationTimer = 1.0f;
+            Calculator.showGuiButton(buttonList, currentUnit);
         }
         else {
 
@@ -160,8 +164,13 @@ public class BattleScreen implements Screen {
         GameText.getInstance().update(dt);
         if (isHeroTurn() && canIMakeTurn()) {
             stage.act(dt);
-            if (currentUnit.getActionPanel() != null) {
-                currentUnit.getActionPanel().setVisible(true);
+
+            //update button
+            if (currentUnit.isPlayer()) {
+                for (int i = 0; i < currentUnit.getActions().size(); i++) {
+                    if (currentUnit.getActions().get(i).isActive())
+                        currentUnit.getActions().get(i).update(dt);
+                }
             }
         }
 
@@ -186,16 +195,24 @@ public class BattleScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         update(delta);
-        batch.draw(backGround,0,0);
+        batch.draw(backGround,0,0, RpgGame.SCREEN_WIDTH, RpgGame.SCREEN_HEIGHT);
 
         batch.setColor(1, 1, 0, 0.8f);
         batch.draw(textureRegion, currentUnit.getPosition().x, currentUnit.getPosition().y - 5);
 
+        // drawing target cursor
         if (isHeroTurn() && currentUnit.getTarget() != null) {
             batch.setColor(1, 0, 0, 0.8f);
             batch.draw(textureRegion, currentUnit.getTarget().getPosition().x, currentUnit.getTarget().getPosition().y - 5);
         }
 
+        //render button
+        if (currentUnit.isPlayer()) {
+            for (int i = 0; i < currentUnit.getActions().size(); i++) {
+                if (currentUnit.getActions().get(i).isActive())
+                    currentUnit.getActions().get(i).render(batch);
+            }
+        }
 
         batch.setColor(1, 1, 1, 1);
 

@@ -48,7 +48,7 @@ public class GenerateUnit {}
 //
 //    private void createUnitForBattle(Set<Unit> set, Map<String, Boolean> listPosition) {
 //        // создаем мобов +-1 уровень от главного персонажа игрока
-//        set.add(unitFactory.createUnit(UnitFactory.UnitType.SKELETON, false, 3));
+//        set.add(unitFactory.createUnit(UnitFactory.UnitType.ANVIL_MAN, false, 3));
 //
 //    }
 //

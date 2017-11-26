@@ -1,13 +1,10 @@
 package pro.x_way.infinities_war.text;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 
-import pro.x_way.infinities_war.gui.GUI;
 import pro.x_way.infinities_war.units.Unit;
 
 
@@ -29,7 +26,7 @@ public class GameText {
     }
 
     public void gameTextSetup() {
-        font = StyleText.getInstance().getTextSize14();
+        font = StyleText.getInstance().getTextSize20();
         flyingText = new FlyingText();
     }
 
@@ -71,8 +68,8 @@ public class GameText {
     //StatusBar
     public void printStatusBar(Unit unit) {
         Vector2 position = unit.getPosition();
-        font.draw(batch, String.valueOf(unit.getHp()), position.x, position.y + unit.getHEIGHT() + Unit.HEIGHT_STATUS_BAR_ROW, Unit.FULL_STATUS, 1, false);
-        font.draw(batch, String.valueOf(unit.getMp()), position.x, position.y + unit.getHEIGHT(), Unit.FULL_STATUS, 1, false);
+        font.draw(batch, String.valueOf(unit.getHp()), position.x + (unit.getWIDTH()/3), position.y + unit.getHEIGHT() + Unit.HEIGHT_STATUS_BAR_ROW, Unit.FULL_STATUS, 1, false);
+        font.draw(batch, String.valueOf(unit.getMp()), position.x + (unit.getWIDTH()/3), position.y + unit.getHEIGHT(), Unit.FULL_STATUS, 1, false);
         font.setColor(Color.WHITE);
     }
 

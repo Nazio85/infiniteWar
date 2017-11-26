@@ -20,12 +20,11 @@ public class Assets {
     public static final String SKELETON = "skeleton";
     public static final String ACTION_PANEL = "actionPanel";
     public static final String BTN_RANGED = "btnRanged";
-    public static final String BTN_REGEN = "btnRegen";
-    public static final String BTN_MELEE_ATTACK = "btnMeleeAttack";
-    public static final String BTN_DEFENCE = "btnDefence";
-    public static final String BTN_HEAL = "btnHeal";
+    public static final String BTN_MELEE_ATTACK = "buttonMeleeAttack";
+    public static final String BTN_DEFENCE = "buttonDefence";
+    public static final String BTN_HEAL = "buttonHeal";
+    public static final String BTN_REST = "buttonRest";
     public static final String SELECTOR = "selector";
-    public static final String HP_BAR = "hpBar";
     public static final String BACKGROUND_PNG = "background.png";
     public static final String PACK_PACK = "pack.pack";
     public static final String GO_TO_MENU = "goToMenu";

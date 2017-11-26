@@ -7,33 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pro.x_way.infinities_war.Assets;
-import pro.x_way.infinities_war.actions.BaseAction;
-import pro.x_way.infinities_war.actions.DefenceStanceAction;
-import pro.x_way.infinities_war.actions.MeleeAttackAction;
-import pro.x_way.infinities_war.actions.RestAction;
+import pro.x_way.infinities_war.skils.FabricSkills;
+import pro.x_way.infinities_war.skils.Skill;
 
 
 public class UnitFactory {
 
 
     public enum UnitType {
-        KNIGHT,
-        SKELETON
+        SWORD_MAN, ANVIL_MAN, MOUNTAIN
     }
 
     private List<Autopilot> aiBank;
-    private List<BaseAction> actions;
+    private List<Skill> actions;
 
-    public List<BaseAction> getActions() {
-        return actions;
-    }
-
-    public TextureAtlas.AtlasRegion getTexture(UnitType unitType){
-        switch (unitType){
-            case KNIGHT:
-                return Assets.getInstance().getAtlas().findRegion(Assets.KNIGHT);
-            case SKELETON:
-                return Assets.getInstance().getAtlas().findRegion(Assets.SKELETON);
+    public TextureAtlas.AtlasRegion getTexture(UnitType unitType) {
+        switch (unitType) {
+            case SWORD_MAN:
+                return Assets.getInstance().getAtlas().findRegion("Unit1");
+            case ANVIL_MAN:
+                return Assets.getInstance().getAtlas().findRegion("Unit3");
+            case MOUNTAIN:
+                return Assets.getInstance().getAtlas().findRegion("Unit6");
         }
         return null;
     }
@@ -43,57 +38,63 @@ public class UnitFactory {
         this.aiBank = new ArrayList<Autopilot>();
         this.aiBank.add(new Autopilot() {
             @Override
-            public boolean turn(Unit me) {
-                if (!me.getBattleScreen().canIMakeTurn()) {
+            public boolean turn(Unit currentUnit) {
+                if (!currentUnit.getBattleScreen().canIMakeTurn()) {
                     return false;
                 }
                 Unit target;
                 do {
-                    target = me.getBattleScreen().getUnits().get((int) (Math.random() * me.getBattleScreen().getUnits().size()));
+                    target = currentUnit.getBattleScreen().getUnits().get((int) (Math.random() * currentUnit.getBattleScreen().getUnits().size()));
                 } while (!target.isPlayer());
-                me.setTarget(target);
-                me.getActions().get(0).action(me);
+                currentUnit.setTarget(target);
+                currentUnit.getActions().get(0).actionStart(currentUnit, currentUnit.getTarget());
                 return true;
             }
         });
     }
 
     public void createActions() {
-        this.actions = new ArrayList<BaseAction>();
-        this.actions.add(new MeleeAttackAction());
-        this.actions.add(new DefenceStanceAction());
-        this.actions.add(new RestAction());
+        this.actions = new ArrayList<Skill>();
+        this.actions.add(FabricSkills.getSkill(FabricSkills.SkillType.actionMeleeAttack));
+        this.actions.add(FabricSkills.getSkill(FabricSkills.SkillType.defence));
+        this.actions.add(FabricSkills.getSkill(FabricSkills.SkillType.rest));
     }
 
     private Stats getStats(UnitType unitType) {
         Stats stats;
         // все пер левл не должны превышать в сумме 10 (опыт не учитывается)
         switch (unitType) {
-            case KNIGHT:
-                stats = new Stats(1, 20, 10, 30,
+            case SWORD_MAN:
+                stats = new Stats(1, 10, 10, 10,
                         2, 5, 10,
                         3, 2, 2, 2, 1,
                         5);
                 return stats;
-            case SKELETON:
+            case ANVIL_MAN:
                 stats = new Stats(1, 10, 20, 10,
                         1, 0, 8,
                         2, 3, 3, 1, 1,
                         4);
+                return stats;
+            case MOUNTAIN:
+                stats = new Stats(1, 30, 20, 10,
+                        1, 0, 20,
+                        5, 5, 1, 1, 1,
+                        10);
                 return stats;
             default:
                 return null;
         }
     }
 
-    public void addActions(UnitType unitType, Unit unit){
-        switch (unitType){
-            case KNIGHT:
+    public void addActions(UnitType unitType, Unit unit) {
+        switch (unitType) {
+            case SWORD_MAN:
                 unit.getActions().add(actions.get(0));
                 unit.getActions().add(actions.get(1));
                 unit.getActions().add(actions.get(2));
                 break;
-            case SKELETON:
+            case ANVIL_MAN:
                 unit.getActions().add(actions.get(0));
                 unit.getActions().add(actions.get(1));
                 unit.getActions().add(actions.get(2));

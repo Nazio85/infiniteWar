@@ -17,7 +17,7 @@ public class RegenerationEffect extends Effect {
     public void tick() {
         super.tick();
         GameText.getInstance().printEffectText(unit, Color.GREEN, "Regeneration");
-        unit.changeHp((int)(unit.getMaxHp() * 0.05f));
+        unit.changeHp((int)(unit.getMaxHp() * 0.05f), Unit.TypeDamage.Hill);
     }
 
     @Override

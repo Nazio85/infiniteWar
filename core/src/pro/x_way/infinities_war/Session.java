@@ -34,14 +34,20 @@ public class Session implements Serializable {
     }
 
     private void createAI() {
-        columnTree[1] = unitFactory.createUnit(UnitFactory.UnitType.SKELETON, false, 3);
+        columnTree[1] = unitFactory.createUnit(UnitFactory.UnitType.ANVIL_MAN, false, 3);
+        columnTree[0] = unitFactory.createUnit(UnitFactory.UnitType.ANVIL_MAN, false, 3);
+        columnFour[0] = unitFactory.createUnit(UnitFactory.UnitType.ANVIL_MAN, false, 3);
+        columnFour[1] = unitFactory.createUnit(UnitFactory.UnitType.SWORD_MAN, false, 3);
     }
 
     private void createPlayerTeam() {
-        columnTwo[1] = unitFactory.createUnit(UnitFactory.UnitType.KNIGHT, true, 1);
+        columnOne[0] = unitFactory.createUnit(UnitFactory.UnitType.SWORD_MAN, true, 1);
+        columnOne[1] = unitFactory.createUnit(UnitFactory.UnitType.ANVIL_MAN, true, 1);
+        columnTwo[0] = unitFactory.createUnit(UnitFactory.UnitType.SWORD_MAN, true, 1);
+        columnTwo[1] = unitFactory.createUnit(UnitFactory.UnitType.ANVIL_MAN, true, 1);
     }
 
-    public void loadFight(BattleScreen battleScreen) {
+    public void setToMap(BattleScreen battleScreen) {
         if (columnOne[0] != null) columnOne[0].setToMap(battleScreen, UnitPosition.HERO_COLUMN_ONE.getNumber(), UnitPosition.ROW_ONE.getNumber());
         if (columnOne[1] != null) columnOne[1].setToMap(battleScreen, UnitPosition.HERO_COLUMN_ONE.getNumber(), UnitPosition.ROW_TWO.getNumber());
         if (columnTwo[0] != null) columnTwo[0].setToMap(battleScreen, UnitPosition.HERO_COLUMN_TWO.getNumber(), UnitPosition.ROW_ONE.getNumber());
@@ -82,7 +88,7 @@ public class Session implements Serializable {
 
     public enum UnitPosition {
         HERO_COLUMN_ONE(0), HERO_COLUMN_TWO(1),
-        ENEMY_COLUMN_ONE(2), ENEMY_COLUMN_TWO(2),
+        ENEMY_COLUMN_ONE(2), ENEMY_COLUMN_TWO(3),
         ROW_ONE(0), ROW_TWO(1);
 
         int number;

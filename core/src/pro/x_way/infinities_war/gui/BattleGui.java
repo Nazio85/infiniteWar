@@ -2,7 +2,6 @@ package pro.x_way.infinities_war.gui;
 
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,11 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.swing.Action;
 
 import pro.x_way.infinities_war.Assets;
 import pro.x_way.infinities_war.Session;
-import pro.x_way.infinities_war.actions.BaseAction;
+import pro.x_way.infinities_war.skils.Skill;
 import pro.x_way.infinities_war.text.StyleText;
 import pro.x_way.infinities_war.units.Unit;
 import pro.x_way.infinities_war.units.UnitFactory;
@@ -45,30 +49,38 @@ public class BattleGui {
         createGui();
     }
 
-    public void createGui(){
+    public List<Button> createGui() {
         skin = new Skin(Assets.getInstance().getAtlas());
-        prepareTextureForBtnPanel();
-        for (Unit unit : units) {
-            if (unit.isPlayer()) {
-                Group actionPanel = createActionPanel(unit);
-                stage.addActor(actionPanel);
-                createBtnForActionPanel(unit, actionPanel);
+
+        List<Button> buttonList = new ArrayList<Button>();
+        Set<Skill> actionsList = new HashSet<Skill>();
+        for (int i = 0; i < units.size(); i++) {
+            final Unit unit = units.get(i);
+            List<Skill> userActions = unit.getActions();
+            for (final Skill skill : userActions) {
+                if (!actionsList.contains(skill)) {
+                    actionsList.add(skill);
+                    createBtnStyle(skill.getBtnTexture());
+                    Button button = new Button(skin, skill.getBtnTexture());
+                    button.setPosition(skill.getPositionButton().x, skill.getPositionButton().y);
+                    button.setSize(skill.getSize(), skill.getSize());
+                    button.addListener(new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent event, Actor actor) {
+                            if (unit.isPlayer()) {
+                                skill.actionStart(battleScreen.getCurrentUnit(), battleScreen.getCurrentUnit().getTarget());
+                                battleScreen.nextTurn();
+                            }
+                        }
+                    });
+                    stage.addActor(button);
+                }
+
             }
+
         }
 
-
-
-        createBtnStyle(Assets.GO_TO_MENU);
-        Button buttonGoToMenu = new Button(skin, Assets. GO_TO_MENU);
-        buttonGoToMenu.setPosition(1160,600);
-        buttonGoToMenu.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.MENU);
-            }
-        });
-        stage.addActor(buttonGoToMenu);
-
+        stage.addActor(createButtonGoToMenu());
 
 //        Create Window nextLevel
         Group windowNextLevel = createWindowNextLevel();
@@ -81,6 +93,20 @@ public class BattleGui {
         windowNextLevel.addActor(buttonStayHere);
         windowNextLevel.addActor(buttonNextLevel);
         stage.addActor(windowNextLevel);
+        return buttonList;
+    }
+
+    private Button createButtonGoToMenu() {
+        createBtnStyle(Assets.GO_TO_MENU);
+        Button buttonGoToMenu = new Button(skin, Assets.GO_TO_MENU);
+        buttonGoToMenu.setPosition(1160, 600);
+        buttonGoToMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.MENU);
+            }
+        });
+        return buttonGoToMenu;
     }
 
     private Label createLabelYouWin() {
@@ -96,62 +122,22 @@ public class BattleGui {
     private Button createBtnStayHere() {
         createBtnStyle(Assets.BTN_STAY_HERE);
         Button buttonStayHere = new Button(skin, Assets.BTN_STAY_HERE);
-        buttonStayHere.setPosition(20,20);
+        buttonStayHere.setPosition(20, 20);
         return buttonStayHere;
     }
 
     private Button createBtnNextLevel() {
         createBtnStyle(Assets.BTN_NEXT_LEVEL);
         Button buttonNextLevel = new Button(skin, Assets.BTN_NEXT_LEVEL);
-        buttonNextLevel.setPosition(160,20);
+        buttonNextLevel.setPosition(160, 20);
         return buttonNextLevel;
     }
 
-    private void createBtnStyle(String name){
+    private void createBtnStyle(String name) {
         Button.ButtonStyle buttonStyleNextLevel = new Button.ButtonStyle();
         buttonStyleNextLevel.up = skin.newDrawable(name);
         buttonStyleNextLevel.down = skin.newDrawable(name, Color.GRAY);
         skin.add(name, buttonStyleNextLevel);
-        System.out.println(name);
-    }
-
-    private Group createActionPanel(Unit unit) {
-        Group actionPanel = new Group();
-        Image image = new Image(Assets.getInstance().getAtlas().findRegion(Assets.ACTION_PANEL));
-        actionPanel.addActor(image);
-        actionPanel.setPosition(RpgGame.SCREEN_WIDTH / 2 - 840 / 2, 5);
-        actionPanel.setVisible(false);
-        unit.setActionPanel(actionPanel);
-        return actionPanel;
-    }
-
-    private void createBtnForActionPanel(final Unit o, Group actionPanel) {
-        int counter = 0;
-        final Unit innerUnit = o;
-        for (BaseAction a : o.getActions()) {
-            final BaseAction baseAction = a;
-            Button btn = new Button(skin, a.getBtnTexture());
-            btn.setPosition(30 + counter * 100, 30);
-            btn.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    if (innerUnit.isPlayer()) {
-                        if (baseAction.action(innerUnit)) {
-                            battleScreen.nextTurn();
-                        }
-                    }
-                }
-            });
-            actionPanel.addActor(btn);
-            counter++;
-        }
-    }
-
-    private void prepareTextureForBtnPanel() {
-        List<BaseAction> actions = unitFactory.getActions();
-        for (BaseAction action : actions) {
-            createBtnStyle(action.getBtnTexture());
-        }
     }
 
     private Group createWindowNextLevel() {
